@@ -1,24 +1,32 @@
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import TestComponent from './components/TestComponent';
+import { Routes, Route } from 'react-router-dom';
+import { NavigationBar } from './components/NavigationBar';
+
+// import NotFound from './components/NotFound';
+// import Products from './components/fnComponents/Products';
+// import ProductDetails from './components/fnComponents/ProductDetails';
+
+const NotFound = React.lazy(() => import('./components/NotFound'));
+const Products = React.lazy(() => import('./components/fnComponents/Products'));
+const ProductDetails = React.lazy(() => import('./components/fnComponents/ProductDetails'));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <React.Suspense fallback={<h1> Loading... </h1>}>
+      <NavigationBar />
+      <Routes>
+        <Route path='/products'>
+          <Route index element={<Products />} />
+          <Route path=':name' element={<ProductDetails />} />
+        </Route>
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </React.Suspense>
+    </>
   );
 }
 
