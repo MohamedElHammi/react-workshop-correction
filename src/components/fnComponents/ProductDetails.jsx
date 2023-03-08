@@ -1,13 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import products from "../../data/products.json";
+import {getallProducts} from "../../services/api.js"
 
 export default function ProductDetails() {
-    const { name } = useParams();
-    const product = products.find((product) => product.name === name);
+    const { id } = useParams();
+    // const product = products.find((product) => product.name === name);
+    const [product, setProduct] = useState();
+
+    const getProduct = async (productId) => {
+        const result = await getallProducts(id);
+        setProduct(result.data);
+    }
+
+    useEffect(()=> {
+        getProduct(id);
+    }, []);
+
     return (
-        <Container style={{ marginTop: "30px" }}>
+        <>
+        {product === undefined ? (
+            <h1> Not Found </h1>
+        ) : (
+            <Container style={{ marginTop: "30px" }}>
             <Row>
                 <Col md={4}>
                     <Card.Img
@@ -53,5 +69,8 @@ export default function ProductDetails() {
                 </Col>
             </Row>
         </Container>
+        )}
+        </>
+
     )
 }
